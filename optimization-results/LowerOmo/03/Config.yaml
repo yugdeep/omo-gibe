@@ -1,0 +1,108 @@
+basin:
+  cyclostationarity_interval_count: 12
+  cyclostationarity_interval_duration: month
+  integration_interval_duration: 12
+  name: Lower Omo
+  simulation_horizon: 12
+  simulation_start_time: 2029-01-01 00:00
+biased_initial_population: false
+flows:
+- flow_rate_calculation: mean
+  flow_rate_file: Flow A.xlsx
+  flow_rate_file_interval_duration: month
+  kind: x
+  name: Flow A
+  source_node: null
+  target_node: Gibe-III
+- flow_rate_calculation: mean
+  flow_rate_file: Flow B.xlsx
+  flow_rate_file_interval_duration: month
+  kind: x
+  name: Flow B
+  source_node: null
+  target_node: Koysha
+- flow_rate_calculation: mean
+  flow_rate_file: Flow C.xlsx
+  flow_rate_file_interval_duration: month
+  kind: x
+  name: Flow C
+  source_node: null
+  target_node: Omorate
+- kind: l
+  name: Gibe-III Release
+  source_node: Gibe-III
+  target_node: Koysha
+- kind: l
+  name: Koysha Release
+  source_node: Koysha
+  target_node: Kuraz Headworks
+- demand_flow: true
+  demand_rate_calculation: mean
+  demand_rate_file: Demand Kuraz Sugar.xlsx
+  demand_rate_file_interval_duration: month
+  kind: l
+  name: Canals to Kuraz Sugar Plantations
+  source_node: Kuraz Headworks
+  target_node: null
+- evaporation_flow: true
+  kind: r
+  name: Gibe-III Evaporation
+  source_node: Gibe-III
+  target_node: null
+- evaporation_flow: true
+  kind: r
+  name: Koysha Evaporation
+  source_node: Koysha
+  target_node: null
+- kind: r
+  name: Main Channel
+  source_node: Kuraz Headworks
+  target_node: Omorate
+- demand_flow: true
+  demand_rate_calculation: mean
+  demand_rate_file: Demand Environment.xlsx
+  demand_rate_file_interval_duration: month
+  kind: r
+  name: Outflow to Lake Turkana
+  source_node: Omorate
+  target_node: null
+nodes:
+- bathymetry: Bathymetry Gibe-III.csv
+  efficiency: 0.9
+  evaporation: Gibe-III Evaporation.xlsx
+  head: 9.0
+  initial_volume: 11750000000.0
+  max_power: 1870.0
+  max_volume: 11750000000.0
+  min_volume: 7000000000.0
+  name: Gibe-III
+  power_generation_node: true
+  reservoir_node: true
+  turbine_max_flow: 1064.0
+- bathymetry: Bathymetry Koysha.csv
+  efficiency: 0.9
+  evaporation: Koysha Evaporation.xlsx
+  head: 8.5
+  initial_volume: 0.0
+  max_power: 2160.0
+  max_volume: 6000000000.0
+  min_volume: 3000000000.0
+  name: Koysha
+  power_generation_node: true
+  reservoir_node: true
+  turbine_max_flow: 1440.0
+- name: Kuraz Headworks
+- name: Omorate
+objectives:
+- kind: annual_power_generation_maximization
+  name: Hydropower
+  target_nodes:
+  - Gibe-III
+  - Koysha
+- kind: 90th_percentile_monthly_demand_deficit_minimization
+  name: Irrigation
+  target_flow: Canals to Kuraz Sugar Plantations
+- kind: 90th_percentile_monthly_demand_deficit_minimization
+  name: Environment
+  target_flow: Outflow to Lake Turkana
+random_seed: 3
