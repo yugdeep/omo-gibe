@@ -1,0 +1,5 @@
+config:
+  population_size: 128
+  generations: 625
+  random_seed: 1
+  number_processes: 64
